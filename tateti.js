@@ -86,6 +86,14 @@ function hayGanador (ficha,tabla){
         return 1;
     }
 }
+
+function reiniciarJuego(){
+    TABLERO = [["_","_","_"],["_","_","_"],["_","_","_"]];
+    ocupados = [];
+    ficha = 'X'
+    dibujar(TABLERO);
+    console.log('juegue '+ ficha);    
+}
 // juego : software (interactuan la modulari[csz]acion)
 
 
@@ -102,16 +110,17 @@ const start = async () =>{
                 case 'valido': dibujar(TABLERO);
                     if(hayGanador(ficha,TABLERO)){ 
                         console.log("¡El jugador " + ficha + " gano el juego!");
-                        return 'exit'
                         console.log("quiere jugar de nuevo?/r/n")
-                        console.log("escriba 'si' o 'no'")
-                        /*for await (const dato of rl) {
-                            if (dato == 'si'){
-                                TABLERO = [["_","_","_"],["_","_","_"],["_","_","_"]];
-                            }else{
+                        console.log("escriba 's' o 'n'")
+                        for await (const dato of rl) {
+                            if (dato == 's'){
+                                reiniciarJuego();
+                                //como hago para uq salga del primer for, pero no del segundo?
+                            }else if ('n'){
+                                console.log('ola');
                                 return 'exit';
                             }
-                        */     
+                        }     
                     }
                     cambiarJugador();
                     break;
@@ -122,12 +131,8 @@ const start = async () =>{
         if(TABLERO[0].includes('_')||TABLERO[1].includes('_')||TABLERO[2].includes('_')){ //no anda, deberia ir negado
             console.log('juegue '+ ficha);
         }else{
-            TABLERO = [["_","_","_"],["_","_","_"],["_","_","_"]];
-            ocupados = [];
-            dibujar(TABLERO);
             console.log('empate')
-            ficha = 'X'
-            console.log('juegue '+ ficha);
+            reiniciarJuego();
         }       
     }
 }
