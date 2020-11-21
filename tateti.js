@@ -123,17 +123,16 @@ const start = async () =>{
                             }
                         }     
                     }
-                    cambiarJugador();
+                    if(TABLERO[0].includes('_')||TABLERO[1].includes('_')||TABLERO[2].includes('_')){ //no anda, deberia ir negado
+                        cambiarJugador();
+                        console.log('juegue '+ ficha);
+                    }else{
+                        reiniciarJuego('empate,');
+                    }
                     break;
                 case 'invalido': console.log('la casilla es invalida, seleccione otra'); break;
             }
-        } 
-
-        if(TABLERO[0].includes('_')||TABLERO[1].includes('_')||TABLERO[2].includes('_')){ //no anda, deberia ir negado
-            console.log('juegue '+ ficha);
-        }else{
-            reiniciarJuego('empate,');
-        }       
+        }        
     }
 }
 
