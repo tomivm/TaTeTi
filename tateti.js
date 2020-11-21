@@ -87,12 +87,13 @@ function hayGanador (ficha,tabla){
     }
 }
 
-function reiniciarJuego(){
+function reiniciarJuego(mesage){
     TABLERO = [["_","_","_"],["_","_","_"],["_","_","_"]];
     ocupados = [];
     ficha = 'X'
     dibujar(TABLERO);
-    console.log('juegue '+ ficha);    
+    var mesage = mesage || "";
+    console.log(mesage + 'juegue '+ ficha);    // como logro que solo se ejecute si hay mensaje?
 }
 // juego : software (interactuan la modulari[csz]acion)
 
@@ -131,8 +132,7 @@ const start = async () =>{
         if(TABLERO[0].includes('_')||TABLERO[1].includes('_')||TABLERO[2].includes('_')){ //no anda, deberia ir negado
             console.log('juegue '+ ficha);
         }else{
-            console.log('empate')
-            reiniciarJuego();
+            reiniciarJuego('empate,');
         }       
     }
 }
