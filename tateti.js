@@ -1,3 +1,4 @@
+const { exit } = require("process");
 const readline = require("readline");
 const rl = readline.createInterface({
     input: process.stdin,
@@ -13,6 +14,7 @@ var ficha = 'X';
 // modulracionacion: todas las funciones que hacen al proyecto
 
 function dibujar(tabla){
+    console.clear();
     for(var i = 0 ; i < tabla.length ;i++)    
     console.log(tabla[i].join('|')); 
 }
@@ -23,6 +25,34 @@ function cambiarJugador (){
     }else{
         ficha = 'X';
     }
+}
+
+function disponibilidad(dato,ficha){
+    ocupados.push(dato);
+            switch(dato){
+                case 'exit': return 'exit' ;
+                case '1' : TABLERO [2][0] = ficha;
+                    break;
+                case '2' : TABLERO [2][1] = ficha;
+                    break;
+                case '3' : TABLERO [2][2] = ficha;
+                    break;
+                case '4' : TABLERO [1][0] = ficha;
+                    break;  
+                case '5' : TABLERO [1][1] = ficha;
+                    break;    
+                case '6' : TABLERO [1][2] = ficha;                       
+                    break;
+                case '7' : TABLERO [0][0] = ficha;
+                    break; 
+                case '8' : TABLERO [0][1] = ficha;
+                    break;
+                case '9' : TABLERO [0][2] = ficha;
+                    break;                     
+                default : ocupados.pop(); 
+                        return 'invalido';
+            }    
+        return 'valido'    
 }
 
 function hayGanador (ficha,tabla){
@@ -46,9 +76,9 @@ function hayGanador (ficha,tabla){
         
         col--; //se fija si hay 3 en diagonal invertida
         diagonalInv.push(tabla[i][col]);
-        console.log(diagonalInv);
+
     }
-    //console.log(diagonal);
+    console.log(diagonal);
     if (diagonal.join() == ficha + ','+ ficha + ',' + ficha){
         return 1;
     }
@@ -62,57 +92,43 @@ function hayGanador (ficha,tabla){
 const start = async () =>{
     dibujar(TABLERO);
     console.log('juegue '+ ficha);
-    for await (const dato of rl) {
+    for await (const dato of rl) { 
         if(ocupados.includes(dato)){
             console.log("La casilla esta ocupada, seleccione otra");
-            cambiarJugador();
         }else{
-            ocupados.push(dato);
-            switch(dato){
-                case 'exit': console.log('fin de juego'); return 'exit' ;
-                case '1' : TABLERO [2][0] = ficha;
+            let estado = disponibilidad(dato,ficha);
+            switch (estado){
+                case 'exit':console.log('Fin del juego'); return 'exit';
+                case 'valido': dibujar(TABLERO);
+                    if(hayGanador(ficha,TABLERO)){ 
+                        console.log("¡El jugador " + ficha + " gano el juego!");
+                        return 'exit'
+                        console.log("quiere jugar de nuevo?/r/n")
+                        console.log("escriba 'si' o 'no'")
+                        /*for await (const dato of rl) {
+                            if (dato == 'si'){
+                                TABLERO = [["_","_","_"],["_","_","_"],["_","_","_"]];
+                            }else{
+                                return 'exit';
+                            }
+                        */     
+                    }
+                    cambiarJugador();
                     break;
-                case '2' : TABLERO [2][1] = ficha;
-                    break;
-                case '3' : TABLERO [2][2] = ficha;
-                    break;
-                case '4' : TABLERO [1][0] = ficha;
-                    break;  
-                case '5' : TABLERO [1][1] = ficha;
-                    break;    
-                case '6' : TABLERO [1][2] = ficha;                       
-                    break;
-                case '7' : TABLERO [0][0] = ficha;
-                    break; 
-                case '8' : TABLERO [0][1] = ficha;
-                    break;
-                case '9' : TABLERO [0][2] = ficha;
-                    break;                     
-                default : console.log('inserte posicion valida');
-                    ocupados.pop();
-                    cambiarJugador();   
-                break;
-            }    
-        }
-        if(hayGanador(ficha,TABLERO)){
-            console.log("¡El jugador " + ficha + " gano el juego!");
-            return 'exit'
-            console.log("quiere jugar de nuevo?/r/n")
-            console.log("escriba 'si' o 'no'")
-            /*for await (const dato of rl) {
-                if (dato == 'si'){
-                    TABLERO = [["_","_","_"],["_","_","_"],["_","_","_"]];
-                }else{
-                    return 'exit';
-                }
-            */     
-        }
-        if(TABLERO.includes('_')){ //no anda, deberia ir negado
+                case 'invalido': console.log('la casilla es invalida, seleccione otra'); break;
+            }
+        } 
+
+        if(TABLERO[0].includes('_')||TABLERO[1].includes('_')||TABLERO[2].includes('_')){ //no anda, deberia ir negado
+            console.log('juegue '+ ficha);
+        }else{
             TABLERO = [["_","_","_"],["_","_","_"],["_","_","_"]];
-        }
-        dibujar(TABLERO);
-        cambiarJugador();
-        console.log('juegue '+ ficha);
+            ocupados = [];
+            dibujar(TABLERO);
+            console.log('empate')
+            ficha = 'X'
+            console.log('juegue '+ ficha);
+        }       
     }
 }
 
